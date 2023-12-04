@@ -1,7 +1,8 @@
 pub fn part_1(input: &str) -> usize{
     input.lines().map(|i|{
         let numbers: Vec<char> = i.chars().filter(|x| x.is_ascii_digit()).collect();
-        if numbers.len() >0 {
+        if numbers.len() > 0{
+            println!("{}:{}",i, {numbers.first().unwrap_or(&'0').to_digit(10).unwrap() *10 + numbers.last().unwrap_or(&'0').to_digit(10).unwrap()});
             {numbers.first().unwrap_or(&'0').to_digit(10).unwrap() *10 + numbers.last().unwrap_or(&'0').to_digit(10).unwrap()}.try_into().unwrap()
         }
         else{0}
@@ -23,17 +24,15 @@ pub fn part_2(input: &str) -> usize{
                 for (index, text) in numbers.into_iter().enumerate(){
                     if temporary.contains(text){
                         digits.push(number_keys[index]);
-                        temporary = String::new();
+                        temporary = x.to_string();
                         break
                     }
                 }
             }
         }
         println!("{:?}", digits);
-        let number = if digits.len() > 1{
+        let number = if digits.len() > 0{
             {digits.first().unwrap_or(&'0').to_digit(10).unwrap() *10 + digits.last().unwrap_or(&'0').to_digit(10).unwrap()}.try_into().unwrap()
-        }else if digits.len() == 1{
-            {digits.first().unwrap_or(&'0').to_digit(10).unwrap() *10}.try_into().unwrap()
         }else{
             0
         };
