@@ -10,6 +10,7 @@ pub fn part_1(input: &str) -> usize{
 
 pub fn part_2(input: &str) -> usize{
     let numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    let number_keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
     input.lines().map(|i|{
         let mut digits:Vec<char> = vec![];
         let mut temporary = String::new();
@@ -21,14 +22,21 @@ pub fn part_2(input: &str) -> usize{
                 temporary += &x.to_string();
                 for (index, text) in numbers.into_iter().enumerate(){
                     if temporary.contains(text){
-                        digits.push(char::from_u32({index + 1} as u32).unwrap());
-                        temporary = String::new()
+                        digits.push(number_keys[index]);
+                        temporary = String::new();
+                        break
                     }
                 }
             }
         }
         println!("{:?}", digits);
-        let number: usize = {digits.first().unwrap_or(&'0').to_digit(10).unwrap() *10 + digits.last().unwrap_or(&'0').to_digit(10).unwrap()}.try_into().unwrap();
+        let number = if digits.len() > 1{
+            {digits.first().unwrap_or(&'0').to_digit(10).unwrap() *10 + digits.last().unwrap_or(&'0').to_digit(10).unwrap()}.try_into().unwrap()
+        }else if digits.len() == 1{
+            {digits.first().unwrap_or(&'0').to_digit(10).unwrap() *10}.try_into().unwrap()
+        }else{
+            0
+        };
         println!("{}: {}", i, number);
         number
 
