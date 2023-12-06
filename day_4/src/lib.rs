@@ -34,7 +34,6 @@ pub fn part_2(input: &str) -> usize{
         score
     });  
     let mut multiplication:Vec<usize> = vec![1; 214];
-    let score_list = scores.clone().collect::<Vec<usize>>();
     let mut final_score = 0;
     for (i, x) in scores.enumerate(){
         let mult = multiplication[i];
