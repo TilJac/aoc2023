@@ -48,7 +48,7 @@ pub fn part_2(input: &str) -> u128{
     let len = instructions.len(); 
     let mut startingpoints = startingpoints;
     println!("{:?}", startingpoints);
-    let mut solutions: Vec<(u128, u128)> = startingpoints.iter().map(|&current|{
+    let mut solutions: Vec<u128> = startingpoints.iter().map(|&current|{
         let mut current = current;
         let mut iteration = 0;
         let len = instructions.len(); 
@@ -56,16 +56,37 @@ pub fn part_2(input: &str) -> u128{
             current=list[current][instructions[iteration%len]].as_str();
             iteration += 1;
         }
-        (iteration as u128, iteration as u128)
-    }).collect();
+        iteration as u128}).collect();
     println!("{:?}", solutions);
-    let solutions2 = solutions.clone();
-    while solutions.iter().map(|x|{x.0}).collect::<Vec<u128>>() != vec![solutions[0].0;solutions.len()]{
-        println!("{:?}", solutions);
-        solutions.sort_by(|x,b|{x.0.cmp(&b.0)});
-        solutions[0].0 += solutions[0].1;
+        return lcm_of_list(solutions)
     }
-    return solutions[0].0
+
+// https://rustp.org/number-theory/lcm/
+// Find GCD
+fn gcd(mut a:u128, mut b:u128) -> u128{
+    if a==b { return a; }
+    if b > a {
+        let temp = a;
+        a = b;
+        b = temp;
+    }
+    while b>0 {
+        let temp = a;
+        a = b;
+        b = temp%b;
+    }
+    return a;
 }
 
+fn lcm(a:u128, b:u128) -> u128{
+    // LCM = a*b / gcd
+    return a*(b/gcd(a,b));
+}
 
+fn lcm_of_list(list: Vec<u128>) -> u128{
+    let mut last = list[0];
+    for i in list.iter().skip(1) {
+        last = lcm(last, *i)
+    }
+    last
+}
