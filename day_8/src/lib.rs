@@ -9,32 +9,22 @@ pub fn part_1(input: &str) -> usize{
             _ => 100
         }
     }).collect();
-    println!("{:?}", input);
     input[1].lines().for_each(|x|{
         let line: Vec<&str> = x.split(" = ").collect();
-        println!("line: {:?}", line);
         let vars:Vec<String> = line[1].split(", ").map(|x|{let x = x.replace('(', "").replace(')', "");x}).collect::<Vec<String>>();
-        println!("vars:{:?}", vars);
         list.insert(line[0], [vars[0].clone(), vars[1].clone()]);
     });
     let mut current = "AAA";
     let mut iteration = 0;
-    let len = instructions.len(); // have to check if this is right
-    println!("{:?}, {:?}", list, instructions);
+    let len = instructions.len(); 
     while current != "ZZZ"{
-        println!("{}", iteration%len);
-        println!("{current}");
-        match list.get(current){
-            
-            Some(x) => {current=x[instructions[iteration%len]].as_str()},
-            None => print!("error")
-        }
+        current=list[current][instructions[iteration%len]].as_str();
         iteration += 1;
     }
     return iteration 
 }
 
-pub fn part_2(input: &str) -> usize{
+pub fn part_2(input: &str) -> u128{
     let mut list:HashMap<&str, [String;2]> = HashMap::new();
     let input: Vec<&str> = input.split("\n\n").collect();
     let instructions:Vec<usize> = input[0].chars().map(|x|{
@@ -58,12 +48,24 @@ pub fn part_2(input: &str) -> usize{
     let len = instructions.len(); 
     let mut startingpoints = startingpoints;
     println!("{:?}", startingpoints);
-    while status{
-        status = true;
-        startingpoints = startingpoints.iter().map(|&i|{let value = list[i][instructions[iteration%len]].as_str(); if !value.ends_with('Z'){status = false} value}).collect();
-        iteration += 1;
+    let mut solutions: Vec<(u128, u128)> = startingpoints.iter().map(|&current|{
+        let mut current = current;
+        let mut iteration = 0;
+        let len = instructions.len(); 
+        while !current.ends_with('Z'){
+            current=list[current][instructions[iteration%len]].as_str();
+            iteration += 1;
+        }
+        (iteration as u128, iteration as u128)
+    }).collect();
+    println!("{:?}", solutions);
+    let solutions2 = solutions.clone();
+    while solutions.iter().map(|x|{x.0}).collect::<Vec<u128>>() != vec![solutions[0].0;solutions.len()]{
+        println!("{:?}", solutions);
+        solutions.sort_by(|x,b|{x.0.cmp(&b.0)});
+        solutions[0].0 += solutions[0].1;
     }
-    return iteration 
+    return solutions[0].0
 }
 
 
